@@ -13,3 +13,17 @@ Antes de instalar tienes que activar el `venv` o entorno virtual, esto puede var
 ```sh
 $ pip install -r requirements.txt
 ```
+
+2) ¡Corre el juego!
+
+Windows:
+Estando en la carpeta del proyecto.
+```sh
+$ py .\main.py
+```
+
+Linux y MacOS
+```sh
+$ python3 main.py
+```
+
