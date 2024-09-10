@@ -1,3 +1,6 @@
+import pygame
+
+
 def main():
     print("triki!")
 
