@@ -1,8 +1,10 @@
 import pygame
+from src import Game
 
 
 def main():
-    print("triki!")
+    pygame.init()
+    game = Game()
 
 
 if __name__ == "__main__":
