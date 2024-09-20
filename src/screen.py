@@ -33,5 +33,5 @@ class Screen(Clock):
 
 
 if __name__ == "__main__":
-    menu = Screen("menu")
+    menu = Screen("triki!")
     menu.init()
