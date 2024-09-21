@@ -12,6 +12,10 @@ class Button:
     def __init__(self, background_name: str) -> None:
         self.__surface = get_image(background_name)
 
+    @property
+    def surface(self):
+        return self.__surface
+
     def insert_text(self, text_content: str, size: int, color: ColorValue):
         font = get_font(size)
         text = font.render(text_content, True, color)
