@@ -31,10 +31,14 @@ class Button:
 if __name__ == "__main__":
     screen = Screen("test button!")
     button = Button("PlayButton.png")
-    button.insert_text("Hola!", 16, "yellow")
+    button.insert_text("O", 30, "yellow")
     button.blit(screen.screen)
 
     button2 = Button("PlayButton.png")
-    button2.insert_text("Camilo asdasdasdasdasdasdj!", 16, "yellow")
+    button2.insert_text("X", 30, "yellow")
     button2.blit(screen.screen, y=150)
+
+    button3 = Button("PlayButton.png")
+    button3.insert_text("", 30, "yellow")
+    button3.blit(screen.screen, y=300)
     screen.init()
