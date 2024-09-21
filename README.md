@@ -19,11 +19,11 @@ $ pip install -r requirements.txt
 Windows:
 Estando en la carpeta del proyecto.
 ```sh
-$ py .\main.py
+$ py .\src\main.py
 ```
 
 Linux y MacOS
 ```sh
-$ python3 main.py
+$ python3 src/main.py
 ```
 
