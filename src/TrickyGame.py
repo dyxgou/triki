@@ -1,11 +1,11 @@
 from typing import Any
 import pygame 
 from settings import WIDTH, HEIGHT, TRICKYBIGBUTTON_PATH, TRICKYSMALLBUTTON_PATH, TRICKYGRID_PATH, get_font
+from GameFunctions import CreateButton, CreateImage, ScaleImage, CenterImage
 import sys
 import random
   
 pygame.init()
-
 
 FPS = 10
 FramePerSec = pygame.time.Clock()
@@ -21,85 +21,24 @@ BigButton = pygame.image.load(TRICKYBIGBUTTON_PATH)
 SmallButton = pygame.image.load(TRICKYSMALLBUTTON_PATH)
 Grid = pygame.image.load(TRICKYGRID_PATH)
 
-
-class CreateButton():
-    def __init__(self, CordX, CordY, Sprite, SpriteSize, Text, TextFont, TextColor):
-        SpriteWidth = Sprite.get_width()
-        SpriteHeight = Sprite.get_height()
-        ScaledSpriteX = int(SpriteWidth*SpriteSize)
-        ScaledSpriteY = int(SpriteHeight*SpriteSize)
-        self.image = pygame.transform.scale(Sprite, (ScaledSpriteX, ScaledSpriteY))
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (CordX, CordY)
-        ButtonText = TextFont.render(Text, True, TextColor)
-        TextWidth = ButtonText.get_width()
-        TextHeight = ButtonText.get_height()
-        TextSize = SpriteSize + 0.3
-        ScaledTextX = int(TextWidth*TextSize)
-        ScaledTextY = int(TextHeight*TextSize)
-        self.Text = pygame.transform.scale(ButtonText, (ScaledTextX, ScaledTextY))
-        TextImageX = CordX + (int((ScaledSpriteX-ScaledTextX)/2))
-        TextImageY = CordY + (int((ScaledSpriteY-ScaledTextY)/2))
-        self.TextCords = (TextImageX, TextImageY)
-        self.clicked = False
-
-    def PlaceButton(self):
-        screen.blit(self.image, (self.rect.x, self.rect.y))
-        screen.blit(self.Text, (self.TextCords))
-        
-    def ButtonMouseReact(self):
-        ActionPerform = False
-        MousePosition = pygame.mouse.get_pos()
-        if self.rect.collidepoint(MousePosition):
-            if pygame.mouse.get_pressed()[0]==1 and self.clicked == False:
-                self.clicked = True
-                ActionPerform = True
-            if pygame.mouse.get_pressed()[0]==0:
-                self.clicked = False
-        return ActionPerform
-
-class CreateImage():
-    def __init__(self, CordX, CordY, sprite, size):
-        width = sprite.get_width()
-        height = sprite.get_height()
-        self.image = pygame.transform.scale(sprite, (int(width*size), int(height*size)))
-        self.Cords = (CordX, CordY)
-        self.clicked = False
-
-    def PlaceImage(self):
-        screen.blit(self.image, (self.Cords))
-        
-    
-                
-def TrickyGameTurnsUI(TurnOrder, CordX, CordY, font, color):
+def TrickyGameTurnsUI(CordX, CordY, font, color):
     pygame.draw.rect(screen, background_colour, pygame.Rect(CordX, CordY, 320, 60))
-    TURN_UI = font.render(f"Es el turno de {TurnOrder}", True, color)
+    TURN_UI = font.render(f"Es el turno de {TurnOrder[RandomTurn[0]]}", True, color)
     screen.blit(TURN_UI, (CordX, CordY))
 
-def TrickyGameLogicUI(CordX, CordY, font, color):
+def TrickyGameLogicUI(CordX, CordY, font, color, Sprite, SpriteSize):
+    ScaleUIList = ScaleImage(Sprite, SpriteSize)
+    TrickyGridUI = font.render(f"{TurnOrder[RandomTurn[0]]}", True, color)
+    ScaleTextList = ScaleImage(TrickyGridUI, 1)
+    CenterImageCords = CenterImage(CordX, CordY, ScaleUIList[0], ScaleUIList[1], ScaleTextList[0], ScaleTextList[1])
+    screen.blit(TrickyGridUI, (CenterImageCords[0], CenterImageCords[1]))
     if RandomTurn[0] == 0:
-        TrickyX = font.render(f"X", True, color)
-        screen.blit(TrickyX, (CordX, CordY))
         RandomTurn[0] = 1
-        return
-    if RandomTurn[0] == 1:
-        TrickyO = font.render(f"O", True, color)
-        screen.blit(TrickyO, (CordX, CordY))
+    else:
         RandomTurn[0] = 0
-        return
-
-#Concepto para el tablero
-#def CreateGrid(self):
-#        Grid_X_Size = len(PlayButton_X_Cord)
-#        Grid_Y_Size = len(PlayButton_Y_Cord)
-#        for x in range(Grid_X_Size):
-#            for y in range(Grid_Y_Size):
-#                screen.blit(self.image, (PlayButton_X_Cord[x], PlayButton_Y_Cord[y]))
 
 Grid_X =[125,225,325]
 Grid_Y =[285,380,475]
-TrickyPos_X =[150,250,350]
-TrickyPos_Y =[295,390,485]
 StartButtonIngame = CreateButton(212, 70, BigButton, 0.5, "START", GAME_FONT, (255, 255, 0))
 ExitButtonInGame = CreateButton(212, 130, BigButton, 0.5, "EXIT", GAME_FONT, (255, 255, 0))
 
@@ -131,28 +70,37 @@ def GameTricky():
             if event.type == pygame.QUIT: 
                 pygame.quit()
                 sys.exit()
-        TrickyGameTurnsUI(TurnOrder[RandomTurn[0]], 125, 210, GAME_FONT, (255, 255, 0))
+        TrickyGameTurnsUI(125, 210, GAME_FONT, (255, 255, 0))
         if ExitButtonInGame.ButtonMouseReact() == True:
             pygame.quit()
             sys.exit()
         if PlayButtonInGame1.ButtonMouseReact() == True:
-            TrickyGameLogicUI(TrickyPos_X[0], TrickyPos_Y[0], GAME_FONT, (255, 255, 0))
+            TrickyGameLogicUI(Grid_X[0], Grid_Y[0], GAME_FONT, (255, 255, 0), SmallButton, 0.7)
+            PlayButtonInGame1.RemoveButton()
         if PlayButtonInGame2.ButtonMouseReact() == True:
-            TrickyGameLogicUI(TrickyPos_X[1], TrickyPos_Y[0], GAME_FONT, (255, 255, 0))
+            TrickyGameLogicUI(Grid_X[1], Grid_Y[0], GAME_FONT, (255, 255, 0), SmallButton, 0.7)
+            PlayButtonInGame2.RemoveButton()
         if PlayButtonInGame3.ButtonMouseReact() == True:
-            TrickyGameLogicUI(TrickyPos_X[2], TrickyPos_Y[0], GAME_FONT, (255, 255, 0))
+            TrickyGameLogicUI(Grid_X[2], Grid_Y[0], GAME_FONT, (255, 255, 0), SmallButton, 0.7)
+            PlayButtonInGame3.RemoveButton()
         if PlayButtonInGame4.ButtonMouseReact() == True:
-            TrickyGameLogicUI(TrickyPos_X[0], TrickyPos_Y[1], GAME_FONT, (255, 255, 0))
+            TrickyGameLogicUI(Grid_X[0], Grid_Y[1], GAME_FONT, (255, 255, 0), SmallButton, 0.7)
+            PlayButtonInGame4.RemoveButton()
         if PlayButtonInGame5.ButtonMouseReact() == True:
-            TrickyGameLogicUI(TrickyPos_X[1], TrickyPos_Y[1], GAME_FONT, (255, 255, 0))
+            TrickyGameLogicUI(Grid_X[1], Grid_Y[1], GAME_FONT, (255, 255, 0), SmallButton, 0.7)
+            PlayButtonInGame5.RemoveButton()
         if PlayButtonInGame6.ButtonMouseReact() == True:
-            TrickyGameLogicUI(TrickyPos_X[2], TrickyPos_Y[1], GAME_FONT, (255, 255, 0))
+            TrickyGameLogicUI(Grid_X[2], Grid_Y[1], GAME_FONT, (255, 255, 0), SmallButton, 0.7)
+            PlayButtonInGame6.RemoveButton()
         if PlayButtonInGame7.ButtonMouseReact() == True:
-            TrickyGameLogicUI(TrickyPos_X[0], TrickyPos_Y[2], GAME_FONT, (255, 255, 0))
+            TrickyGameLogicUI(Grid_X[0], Grid_Y[2], GAME_FONT, (255, 255, 0), SmallButton, 0.7)
+            PlayButtonInGame7.RemoveButton()
         if PlayButtonInGame8.ButtonMouseReact() == True:
-            TrickyGameLogicUI(TrickyPos_X[1], TrickyPos_Y[2], GAME_FONT, (255, 255, 0))
+            TrickyGameLogicUI(Grid_X[1], Grid_Y[2], GAME_FONT, (255, 255, 0), SmallButton, 0.7)
+            PlayButtonInGame8.RemoveButton()
         if PlayButtonInGame9.ButtonMouseReact() == True:
-            TrickyGameLogicUI(TrickyPos_X[2], TrickyPos_Y[2], GAME_FONT, (255, 255, 0))
+            TrickyGameLogicUI(Grid_X[2], Grid_Y[2], GAME_FONT, (255, 255, 0), SmallButton, 0.7)
+            PlayButtonInGame9.RemoveButton()
         
         pygame.display.update()
         FramePerSec.tick(FPS)
