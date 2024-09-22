@@ -1,4 +1,4 @@
-from pygame import SurfaceType
+from pygame import SurfaceType, transform as image_transform
 
 
 from screen import Screen
@@ -19,10 +19,20 @@ class Button:
     def insert_text(self, text_content: str, size: int, color: ColorValue):
         font = get_font(size)
         text = font.render(text_content, True, color)
+        text_width, text_height = text.get_size()
+
+        ACCEPTABLE_TEXT_PADDING = 20
+
+        if text_width + ACCEPTABLE_TEXT_PADDING > self.__surface.get_width():
+            self.__surface = image_transform.smoothscale(
+                self.__surface,
+                (self.__surface.get_width() + text_width, text_height * 5),
+            )
+
         text_center_cors = text.get_rect(
             center=(
                 self.__surface.get_width() // 2,
-                self.__surface.get_height() // 2 - 10,
+                self.__surface.get_height() // 2 - 5,
             )
         )
 
@@ -30,6 +40,9 @@ class Button:
 
     def blit(self, surface: SurfaceType, x: int = 0, y: int = 0):
         surface.blit(self.__surface, (x, y))
+
+    def on_click(self):
+        pass
 
 
 if __name__ == "__main__":
