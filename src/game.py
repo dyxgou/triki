@@ -64,7 +64,14 @@ if __name__ == "__main__":
 
     button.on_click = on_quit
 
-    game.blit_button(surface_center, button)
+    surface_width, surface_height = surface_center.get_size()
+
+    game.blit_button(
+        surface_center,
+        button,
+        x=surface_width // 2 - button.surface.get_width() // 2,
+        y=surface_height // 2 - button.surface.get_height() // 2,
+    )
     game.blit_surface(surface_center, center_cors)
 
     def on_click(event: Event):

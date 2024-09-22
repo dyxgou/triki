@@ -5,6 +5,7 @@ from pygame import SurfaceType, transform as image_transform
 from screen import Screen
 from settings import get_font, get_image
 from color import ColorValue
+from errors.button_errors import ButtonNotRedered
 
 Coordinates = Tuple[int, int]
 
@@ -13,14 +14,23 @@ class Button:
     __surface: SurfaceType
     __on_click: Optional[Callable]
     __topleft: Coordinates
+    __coordinates: Optional[Coordinates] = None
 
     def __init__(self, background_name: str, topleft: Coordinates) -> None:
         self.__surface = get_image(background_name)
         self.__topleft = topleft
 
     def is_clicked(self, mouse_pos: Coordinates):
+        if self.__coordinates is None:
+            raise ButtonNotRedered("El botón no ha sido renderizado.")
+
         mouse_x, mouse_y = mouse_pos
         cor_x, cor_y = self.__topleft
+
+        button_x, button_y = self.__coordinates
+        cor_x = cor_x + button_x
+        cor_y = cor_y + button_y
+        print("cors", (cor_x, cor_y))
 
         relative_pos = (mouse_x - cor_x, mouse_y - cor_y)
 
@@ -67,6 +77,7 @@ class Button:
         self.__surface.blit(text, text_center_cors)
 
     def blit(self, surface: SurfaceType, x: int = 0, y: int = 0):
+        self.__coordinates = (x, y)
         surface.blit(self.__surface, (x, y))
 
 
