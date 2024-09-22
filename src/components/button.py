@@ -1,5 +1,8 @@
 from typing import Callable, Optional, Tuple
 from pygame import SurfaceType, transform as image_transform
+import pygame
+from pygame.event import Event
+from pygame.surface import Surface
 
 
 from screen import Screen
@@ -12,13 +15,54 @@ Coordinates = Tuple[int, int]
 
 class Button:
     __surface: SurfaceType
+    __text_surface: SurfaceType
+    __right_corner: SurfaceType
+    __left_corner: SurfaceType
     __on_click: Optional[Callable]
     __topleft: Coordinates
     __coordinates: Optional[Coordinates] = None
 
-    def __init__(self, background_name: str, topleft: Coordinates) -> None:
-        self.__surface = get_image(background_name)
+    def __init__(self, topleft: Coordinates) -> None:
+        self.__text_surface = get_image("TextButton.png")
+        self.__right_corner = get_image("RightCorner.png")
+        self.__left_corner = get_image("LeftCorner.png")
+        self.__surface = Surface(
+            (
+                self.__left_corner.get_width()
+                + self.__text_surface.get_width()
+                + self.__right_corner.get_width(),
+                self.__text_surface.get_height(),  # height
+            ),
+            pygame.SRCALPHA,
+        )
+
         self.__topleft = topleft
+
+    def _blit_text(self):
+        self.__surface = Surface(
+            (
+                self.__left_corner.get_width()
+                + self.__text_surface.get_width()
+                + self.__right_corner.get_width(),
+                self.__text_surface.get_height(),  # height
+            ),
+            pygame.SRCALPHA,
+        )
+
+        self.__surface.blits(
+            (
+                (self.__left_corner, (0, 0)),
+                (self.__text_surface, (self.__left_corner.get_width(), 0)),
+                (
+                    self.__right_corner,
+                    (
+                        self.__text_surface.get_width()
+                        + self.__left_corner.get_width(),
+                        0,
+                    ),
+                ),
+            )
+        )
 
     def is_clicked(self, mouse_pos: Coordinates):
         if self.__coordinates is None:
@@ -58,22 +102,28 @@ class Button:
         text = font.render(text_content, True, color)
         text_width, text_height = text.get_size()
 
-        ACCEPTABLE_TEXT_PADDING = 20
+        ACCEPTABLE_TEXT_PADDING = 15
 
-        if text_width + ACCEPTABLE_TEXT_PADDING > self.__surface.get_width():
-            self.__surface = image_transform.smoothscale(
-                self.__surface,
-                (self.__surface.get_width() + text_width, text_height * 5),
+        text_surface_width = self.__text_surface.get_width()
+
+        if text_width + ACCEPTABLE_TEXT_PADDING > text_surface_width:
+            self.__text_surface = image_transform.smoothscale(
+                self.__text_surface,
+                (
+                    (text_surface_width // 2) + text_width,
+                    self.__text_surface.get_height(),
+                ),
             )
 
         text_center_cors = text.get_rect(
             center=(
-                self.__surface.get_width() // 2,
-                self.__surface.get_height() // 2 - 5,
+                (self.__text_surface.get_width() // 2),
+                (self.__text_surface.get_height() // 2) - (text_height // 3),
             )
         )
 
-        self.__surface.blit(text, text_center_cors)
+        self.__text_surface.blit(text, text_center_cors)
+        self._blit_text()
 
     def blit(self, surface: SurfaceType, x: int = 0, y: int = 0):
         self.__coordinates = (x, y)
@@ -81,17 +131,23 @@ class Button:
 
 
 if __name__ == "__main__":
+
+    def on_click(event: Event):
+        pass
+
     screen = Screen("test button!")
+
+    screen.on_click = on_click
     topleft = screen.screen.get_rect().topleft
-    button = Button("PlayButton.png", topleft)
+    button = Button(topleft)
     button.insert_text("O", 30, "yellow")
     button.blit(screen.screen)
 
-    button2 = Button("PlayButton.png", topleft)
+    button2 = Button(topleft)
     button2.insert_text("X", 30, "yellow")
     button2.blit(screen.screen, y=150)
 
-    button3 = Button("PlayButton.png", topleft)
+    button3 = Button(topleft)
     button3.insert_text("", 30, "yellow")
     button3.blit(screen.screen, y=300)
     screen.init()
