@@ -1,0 +1,2 @@
+class UndefinedClickHandler(Exception):
+    pass
