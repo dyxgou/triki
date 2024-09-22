@@ -30,7 +30,6 @@ class Button:
         button_x, button_y = self.__coordinates
         cor_x = cor_x + button_x
         cor_y = cor_y + button_y
-        print("cors", (cor_x, cor_y))
 
         relative_pos = (mouse_x - cor_x, mouse_y - cor_y)
 
