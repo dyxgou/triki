@@ -27,6 +27,9 @@ class Screen(Clock):
         pygame.display.set_caption(self.__title)
         while self.__running:
             for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pass
+
                 if event.type == pygame.QUIT:
                     self.__running = False
                     pygame.quit()
