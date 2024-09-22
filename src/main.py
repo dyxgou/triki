@@ -1,4 +1,6 @@
 import pygame
+from sys import exit
+
 from pygame.event import Event
 from game import Game
 from components.button import Button
@@ -12,6 +14,12 @@ def main():
 
     start = Button("PlayButton.png", center_cors.topleft)
     start.insert_text("Iniciar!", 16, "yellow")
+
+    def on_start():
+        print("Start Game!")
+
+    start.on_click = on_start
+
     game.blit_button(
         surface_center,
         start,
@@ -21,6 +29,12 @@ def main():
 
     quit = Button("PlayButton.png", center_cors.topleft)
     quit.insert_text("Quit!", 16, "yellow")
+
+    def on_quit():
+        pygame.quit()
+        exit()
+
+    quit.on_click = on_quit
     game.blit_button(
         surface_center,
         quit,
@@ -31,7 +45,11 @@ def main():
 
     def on_click(event: Event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print("Click")
+            mouse_pos = pygame.mouse.get_pos()
+
+            for button in game.buttons:
+                if button.is_clicked(mouse_pos):
+                    button.click()
 
     game.blit_surface(surface_center, center_cors)
     game.on_click = on_click
