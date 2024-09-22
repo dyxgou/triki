@@ -55,7 +55,7 @@ if __name__ == "__main__":
     game = Game("Triki!")
     surface_center, center_cors = game.create_center_surface()
 
-    button = Button("PlayButton.png", center_cors.topleft)
+    button = Button(center_cors.topleft)
     button.insert_text("quit!", 16, "yellow")
 
     def on_quit():

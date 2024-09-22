@@ -10,10 +10,10 @@ def main():
     pygame.init()
 
     game = Game("Triki!")
-    surface_center, center_cors = game.create_center_surface()
+    surface_center, center_cors = game.create_center_surface(x=900, y=900)
 
-    start = Button("PlayButton.png", center_cors.topleft)
-    start.insert_text("Iniciar!", 16, "yellow")
+    start = Button(center_cors.topleft)
+    start.insert_text("Iniciar Juego!", 16, "yellow")
 
     def on_start():
         print("Start Game!")
@@ -27,7 +27,7 @@ def main():
         y=surface_center.get_height() // 2 - start.surface.get_height() // 2,
     )
 
-    quit = Button("PlayButton.png", center_cors.topleft)
+    quit = Button(center_cors.topleft)
     quit.insert_text("Quit!", 16, "yellow")
 
     def on_quit():

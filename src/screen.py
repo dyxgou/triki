@@ -70,7 +70,7 @@ if __name__ == "__main__":
     surface.fill((0, 0, 200))
 
     font = get_font(18)
-    button_img = get_image("PlayButton.png")
+    button_img = get_image("TextButton.png")
     text = font.render("start", True, "yellow")
     text_center_cors = text.get_rect(
         center=(
