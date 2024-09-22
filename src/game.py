@@ -42,7 +42,7 @@ class Game(Screen):
         return (new_surface, center_cors)
 
     def blit_surface(self, surface: SurfaceType, cors: RectType):
-        game.screen.blit(surface, cors)
+        self.screen.blit(surface, cors)
 
     def blit_button(self, surface: SurfaceType, button: Button, x: int = 0, y: int = 0):
         self.__buttons.append(button)
