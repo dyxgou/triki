@@ -1,3 +1,4 @@
+from typing import Callable, Optional, Tuple
 from pygame import SurfaceType, transform as image_transform
 
 
@@ -5,12 +6,39 @@ from screen import Screen
 from settings import get_font, get_image
 from color import ColorValue
 
+Coordinates = Tuple[int, int]
+
 
 class Button:
     __surface: SurfaceType
+    __on_click: Optional[Callable]
+    __topleft: Coordinates
 
-    def __init__(self, background_name: str) -> None:
+    def __init__(self, background_name: str, topleft: Coordinates) -> None:
         self.__surface = get_image(background_name)
+        self.__topleft = topleft
+
+    def is_clicked(self, mouse_pos: Coordinates):
+        mouse_x, mouse_y = mouse_pos
+        cor_x, cor_y = self.__topleft
+
+        relative_pos = (mouse_x - cor_x, mouse_y - cor_y)
+
+        return self.surface.get_rect().collidepoint(relative_pos)
+
+    @property
+    def on_click(self):
+        return self.__on_click
+
+    @on_click.setter
+    def on_click(self, on_click: Callable):
+        self.__on_click = on_click
+
+    def click(self):
+        if self.__on_click is None:
+            return
+
+        self.__on_click()
 
     @property
     def surface(self):
@@ -41,21 +69,19 @@ class Button:
     def blit(self, surface: SurfaceType, x: int = 0, y: int = 0):
         surface.blit(self.__surface, (x, y))
 
-    def on_click(self):
-        pass
-
 
 if __name__ == "__main__":
     screen = Screen("test button!")
-    button = Button("PlayButton.png")
+    topleft = screen.screen.get_rect().topleft
+    button = Button("PlayButton.png", topleft)
     button.insert_text("O", 30, "yellow")
     button.blit(screen.screen)
 
-    button2 = Button("PlayButton.png")
+    button2 = Button("PlayButton.png", topleft)
     button2.insert_text("X", 30, "yellow")
     button2.blit(screen.screen, y=150)
 
-    button3 = Button("PlayButton.png")
+    button3 = Button("PlayButton.png", topleft)
     button3.insert_text("", 30, "yellow")
     button3.blit(screen.screen, y=300)
     screen.init()
