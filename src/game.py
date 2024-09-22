@@ -1,16 +1,25 @@
-from typing import List, Optional, Tuple
+from typing import List, Optional
 import pygame
+from sys import exit
+
+from pygame.event import Event
 from pygame.rect import RectType
+from pygame.surface import SurfaceType
+
 from screen import Screen
 from color import ColorValue
 from components.button import Button
 
 
 class Game(Screen):
-    __surfaces: List[Tuple[pygame.SurfaceType, RectType]] = []
+    __buttons: List[Button] = []
 
     def __init__(self, title: str) -> None:
         super().__init__(title)
+
+    @property
+    def buttons(self):
+        return self.__buttons
 
     def create_center_surface(
         self,
@@ -32,38 +41,40 @@ class Game(Screen):
 
         return (new_surface, center_cors)
 
-    def blit_button(
-        self, surface: pygame.SurfaceType, button: Button, x: int = 0, y: int = 0
-    ):
-        self.__surfaces.append((button.surface, button.surface.get_rect()))
+    def blit_surface(self, surface: SurfaceType, cors: RectType):
+        game.screen.blit(surface, cors)
+
+    def blit_button(self, surface: SurfaceType, button: Button, x: int = 0, y: int = 0):
+        self.__buttons.append(button)
         button.blit(surface, x, y)
 
 
 if __name__ == "__main__":
     pygame.init()
+
     game = Game("Triki!")
-    buttons_surface, center_cors = game.create_center_surface()
+    surface_center, center_cors = game.create_center_surface()
 
-    screen_height = buttons_surface.get_height()
+    button = Button("PlayButton.png", center_cors.topleft)
+    button.insert_text("quit!", 16, "yellow")
 
-    start = Button("PlayButton.png")
-    start.insert_text("Iniciar!", 16, "yellow")
-    game.blit_button(
-        buttons_surface,
-        start,
-        x=buttons_surface.get_width() // 2 - start.surface.get_width() // 2,
-        y=screen_height // 2 - start.surface.get_height(),
-    )
+    def on_quit():
+        pygame.quit()
+        exit()
 
-    quit = Button("PlayButton.png")
-    quit.insert_text("Salir!", 17, "yellow")
-    game.blit_button(
-        buttons_surface,
-        quit,
-        x=buttons_surface.get_width() // 2 - quit.surface.get_width() // 2,
-        y=screen_height // 2 + 20,
-    )
+    button.on_click = on_quit
 
-    game.screen.blit(buttons_surface, center_cors)
+    game.blit_button(surface_center, button)
+    game.blit_surface(surface_center, center_cors)
+
+    def on_click(event: Event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = pygame.mouse.get_pos()
+
+            for button in game.buttons:
+                if button.is_clicked(mouse_pos):
+                    button.click()
+
+    game.on_click = on_click
 
     game.init()
