@@ -40,11 +40,12 @@ class Screen(Clock):
 
     def init(self):
         if self.__on_click is None:
-            raise screen_errors.UndefinedClickError(
+            raise screen_errors.UndefinedClickException(
                 "El click handler no ha sido definido."
             )
 
         pygame.display.set_caption(self.__title)
+
         while self.__running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
