@@ -19,4 +19,4 @@ def get_image(image_name: str):
     Ésta function retorna la imagen cargada en pygame.
     """
     image_path = assets / image_name
-    return pygame.image.load(image_path)
+    return pygame.image.load(image_path).convert_alpha()
