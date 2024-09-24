@@ -12,16 +12,17 @@ from components.button import Button
 
 
 class Game(Screen):
-    __buttons: List[Button] = []
+    __buttons: List[Button]
 
     def __init__(self, title: str) -> None:
         super().__init__(title)
+        self.__buttons = []
 
     @property
     def buttons(self):
         return self.__buttons
 
-    def create_center_surface(
+    def create_surface(
         self,
         x: int = 500,
         y: int = 500,
@@ -34,6 +35,17 @@ class Game(Screen):
             new_surface = pygame.Surface.convert_alpha(new_surface)
         elif color is not None:
             new_surface.fill(color)
+
+        return new_surface
+
+    def create_center_surface(
+        self,
+        x: int = 500,
+        y: int = 500,
+        alpha: bool = False,
+        color: Optional[ColorValue] = None,
+    ):
+        new_surface = self.create_surface(x, y, alpha, color)
 
         center_cors = new_surface.get_rect(
             center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
