@@ -7,6 +7,11 @@ WIDTH = 1280
 HEIGHT = 853
 
 
+BUTTON_WIDTH = 130
+BUTTON_HEIGHT = 105
+PADDING = 20
+
+
 def get_font(size: int):
     pygame.font.init()
     font_path = assets / "font.ttf"
