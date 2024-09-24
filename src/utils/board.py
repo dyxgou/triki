@@ -2,8 +2,6 @@ from enum import Enum
 from typing import List
 
 from errors.button_errors import EmptyPlayException
-from components.button import Coordinates
-from components.game_button import GameButton
 
 
 class Plays(Enum):
@@ -54,17 +52,6 @@ class Board:
         shifted_index = self.__get_index(x, y)
 
         return self.__board[shifted_index]
-
-    @staticmethod
-    def create_button(topleft: Coordinates, x: int, y: int):
-        button = GameButton(topleft, x, y)
-
-        def f():
-            print("click ", x, y)
-
-        button.on_click = f
-
-        return button
 
 
 if __name__ == "__main__":
