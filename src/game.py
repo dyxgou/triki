@@ -42,6 +42,13 @@ class Game(Screen):
         return (new_surface, center_cors)
 
     def blit_surface(self, surface: SurfaceType, cors: RectType):
+        """
+        Con este metodo podemos dibujar superficies con sus repectivos elementos en pantalla.
+
+        Args:
+            surface (Surface): La superficie que se va a renderizar.
+            cors (RectType): Las coordenadas donde se va a dibujar la superficie.
+        """
         self.screen.blit(surface, cors)
 
     def blit_button(self, surface: SurfaceType, button: Button, x: int = 0, y: int = 0):
