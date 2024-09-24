@@ -86,7 +86,7 @@ if __name__ == "__main__":
             mouse_pos = pygame.mouse.get_pos()
 
             for button in game.buttons:
-                if button.is_clicked(mouse_pos):
+                if button.is_hover(mouse_pos):
                     button.click()
 
     game.on_click = on_click
