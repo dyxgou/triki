@@ -8,7 +8,7 @@ from pygame.surface import Surface
 from screen import Screen
 from settings import get_font, get_image
 from color import ColorValue
-from errors.button_errors import ButtonNotRedered
+from errors.button_errors import ButtonNotRederedException
 
 Coordinates = Tuple[int, int]
 
@@ -64,9 +64,9 @@ class Button:
             )
         )
 
-    def is_clicked(self, mouse_pos: Coordinates):
+    def is_hover(self, mouse_pos: Coordinates):
         if self.__coordinates is None:
-            raise ButtonNotRedered("El botón no ha sido renderizado.")
+            raise ButtonNotRederedException("El botón no ha sido renderizado.")
 
         mouse_x, mouse_y = mouse_pos
         cor_x, cor_y = self.__topleft
@@ -97,7 +97,9 @@ class Button:
     def surface(self):
         return self.__surface
 
-    def insert_text(self, text_content: str, size: int, color: ColorValue):
+    def insert_text(
+        self, text_content: str, size: int = 16, color: ColorValue = "white"
+    ):
         font = get_font(size)
         text = font.render(text_content, True, color)
         text_width, text_height = text.get_size()
@@ -131,13 +133,8 @@ class Button:
 
 
 if __name__ == "__main__":
-
-    def on_click(event: Event):
-        pass
-
     screen = Screen("test button!")
 
-    screen.on_click = on_click
     topleft = screen.screen.get_rect().topleft
     button = Button(topleft)
     button.insert_text("O", 30, "yellow")
@@ -150,4 +147,9 @@ if __name__ == "__main__":
     button3 = Button(topleft)
     button3.insert_text("", 30, "yellow")
     button3.blit(screen.screen, y=300)
+
+    def on_click(event: Event):
+        pass
+
+    screen.on_click = on_click
     screen.init()
