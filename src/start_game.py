@@ -1,11 +1,11 @@
 import pygame
+from sys import exit
 from pygame.event import Event
 from game import Game
 from components.button import Button
-
-BUTTON_WIDTH = 130
-BUTTON_HEIGHT = 105
-PADDING = 20
+from settings import BUTTON_HEIGHT, BUTTON_WIDTH, PADDING
+from utils.render_board import render_board
+from utils import Board
 
 
 def start_game():
@@ -15,19 +15,32 @@ def start_game():
         y=(BUTTON_HEIGHT * 3) + PADDING * 2,
     )
 
-    for i in range(3):
-        for j in range(3):
-            button = Button(center_cors.topleft)
-            print(button.surface.get_size())
-            button.insert_text("")
-            game.blit_button(
-                surface_center,
-                button,
-                x=i * (button.surface.get_width() + PADDING),
-                y=j * (button.surface.get_height() + PADDING),
-            )
+    buttons_surface = game.create_surface(surface_center.get_width(), y=200)
+    button_cors = buttons_surface.get_rect(bottomleft=(center_cors.topleft))
+
+    quit_button = Button(button_cors.topleft)
+
+    quit_button.insert_text("¡Salir!", 16, "yellow")
+
+    def on_quit():
+        pygame.quit()
+        exit()
+
+    quit_button.on_click = on_quit
+
+    game.blit_button(
+        buttons_surface,
+        quit_button,
+        x=(buttons_surface.get_width() // 2) - quit_button.surface.get_width() // 2,
+        y=(buttons_surface.get_height() // 2) - quit_button.surface.get_height() // 2,
+    )
+
+    board = Board()
+
+    render_board(surface_center, center_cors, board, game)
 
     game.blit_surface(surface_center, center_cors)
+    game.blit_surface(buttons_surface, button_cors)
 
     def on_click(event: Event):
         mouse_pos = pygame.mouse.get_pos()
@@ -35,7 +48,8 @@ def start_game():
         for button in game.buttons:
             if button.is_hover(mouse_pos):
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    pass
+                    button.click()
+                    render_board(surface_center, center_cors, board, game)
 
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 break
