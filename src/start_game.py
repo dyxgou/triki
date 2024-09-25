@@ -5,6 +5,7 @@ from game import Game
 from components.button import Button
 from settings import BUTTON_HEIGHT, BUTTON_WIDTH, PADDING
 from utils.render_board import render_board
+from utils.get_turn_surface import get_turn_surface
 from utils import Board
 
 
@@ -16,7 +17,7 @@ def start_game():
     )
 
     buttons_surface = game.create_surface(surface_center.get_width(), y=200)
-    button_cors = buttons_surface.get_rect(bottomleft=(center_cors.topleft))
+    button_cors = buttons_surface.get_rect(bottomleft=center_cors.topleft)
 
     quit_button = Button(button_cors.topleft)
 
@@ -37,10 +38,13 @@ def start_game():
 
     board = Board()
 
+    # render_turn = get_turn_surface(game, center_cors)
+
     render_board(surface_center, center_cors, board, game)
 
     game.blit_surface(surface_center, center_cors)
     game.blit_surface(buttons_surface, button_cors)
+    # render_turn(board.turn)
 
     def on_click(event: Event):
         mouse_pos = pygame.mouse.get_pos()
@@ -50,6 +54,7 @@ def start_game():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     button.click()
                     render_board(surface_center, center_cors, board, game)
+                    # render_turn(board.turn)
 
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 break
