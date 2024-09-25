@@ -17,6 +17,10 @@ class Board:
     __board: List[Plays]
     __turn: int = 1  # El turno de las X siempre será impar y el de las O será par
 
+    @property
+    def turn(self):
+        return self.__turn
+
     def __init__(self) -> None:
         self.__board = [Plays.EMPTY] * (ROWS * ROWS)
 

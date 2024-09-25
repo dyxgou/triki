@@ -11,7 +11,6 @@ def render_board(surface: SurfaceType, cors: RectType, board: Board, game: Game)
         for j in range(3):
             button = GameButton(cors.topleft, i, j)
             button.on_click = button.get_on_click(board)
-            print(board.get_play(i, j))
             button.insert_play(board)
             game.blit_button(
                 surface,
