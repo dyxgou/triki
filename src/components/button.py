@@ -81,6 +81,7 @@ class Button:
 
     @property
     def on_click(self):
+        self.__on_click = None
         return self.__on_click
 
     @on_click.setter
