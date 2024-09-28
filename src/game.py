@@ -117,14 +117,10 @@ class Game(Screen):
 
     def blit_button(self, surface: SurfaceType, button: Button, x: int = 0, y: int = 0):
         self.__buttons.append(button)
+        button.blit(surface, x, y)
         """
         Dibujamos un botón en la superficie y añade el botón a la lista de botones.
             self.__buttons.append(button): Añade el botón a la lista interna.
-        """
-
-        button.blit(surface, x, y)
-        """
-        Dibuja el botón en la superficie en las coordenadas especificadas.
             button.blit(surface, x, y): Dibuja el botón en la superficie en las coordenadas especificadas (x, y).
         """
 
