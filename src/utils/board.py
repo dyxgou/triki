@@ -79,7 +79,7 @@ class Board:
 
         if value == Plays.EMPTY:
             raise EmptyPlayException(
-                "No se puede asignar una jugada vacía otra vez al tablero"
+                "No se puede asignar una jugada vacia otra vez al tablero"
             )
 
         self.__board[index] = value
