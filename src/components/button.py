@@ -15,24 +15,33 @@ Coordinates = Tuple[int, int]
 
 class Button:
     """
-    Clase que representa un botón interactivo en Pygame con imágenes y texto.
+    Clase que representa un botón en la pantalla. 
+    Maneja la superficie, posición, texto y eventos del botón.
 
-    Atributos:
-        __surface (SurfaceType): Superficie completa del botón compuesta por la esquina izquierda, texto e imagen de esquina derecha.
-        __text_surface (SurfaceType): Superficie que contiene el texto dentro del botón.
-        __right_corner (SurfaceType): Imagen que representa la esquina derecha del botón.
-        __left_corner (SurfaceType): Imagen que representa la esquina izquierda del botón.
-        __on_click (Optional[Callable]): Función que se ejecuta cuando el botón es clicado.
-        __topleft (Coordinates): Coordenadas de la esquina superior izquierda donde se dibuja el botón.
-        __coordinates (Optional[Coordinates]): Coordenadas actuales del botón en la superficie donde fue renderizado.
+    Attributes:
+        __surface (SurfaceType): Superficie del botón renderizado.
+        __text_surface (SurfaceType): Superficie donde se renderiza el texto.
+        __right_corner (SurfaceType): Imagen para la esquina derecha del botón.
+        __left_corner (SurfaceType): Imagen para la esquina izquierda del botón.
+        __on_click (Optional[Callable]): Función a ejecutar cuando el botón es clicado.
+        __topleft (Coordinates): Coordenadas de la esquina superior izquierda del botón.
+        __coordinates (Optional[Coordinates]): Coordenadas donde se renderiza el botón.
     """
+
+    __surface: SurfaceType
+    __text_surface: SurfaceType
+    __right_corner: SurfaceType
+    __left_corner: SurfaceType
+    __on_click: Optional[Callable]
+    __topleft: Coordinates
+    __coordinates: Optional[Coordinates] = None
 
     def __init__(self, topleft: Coordinates) -> None:
         """
-        Inicializa un nuevo botón con imágenes predefinidas.
+        Inicializa el botón con la posición topleft y carga las imágenes necesarias.
 
-        Argumentos:
-            topleft (Coordinates): Coordenadas de la esquina superior izquierda donde se posicionará el botón.
+        Args:
+            topleft (Coordinates): Coordenadas de la esquina superior izquierda del botón.
         """
         self.__text_surface = get_image("TextButton.png")
         self.__right_corner = get_image("RightCorner.png")
@@ -51,7 +60,8 @@ class Button:
 
     def _blit_text(self):
         """
-        Dibuja el texto junto con las esquinas izquierda y derecha del botón sobre la superficie del botón.
+        Actualiza la superficie del botón con el texto y renderiza las imágenes
+        de las esquinas izquierda y derecha.
         """
         self.__surface = Surface(
             (
@@ -80,16 +90,16 @@ class Button:
 
     def is_hover(self, mouse_pos: Coordinates):
         """
-        Verifica si el cursor del mouse está sobre el botón.
+        Verifica si el puntero del mouse está sobre el botón.
 
         Args:
             mouse_pos (Coordinates): Posición actual del mouse.
 
-        Raises:
-            ButtonNotRederedException: Si el botón aún no ha sido renderizado en la pantalla.
-
         Returns:
-            bool: Verdadero si el mouse está sobre el botón, Falso en caso contrario.
+            bool: True si el mouse está sobre el botón, False en caso contrario.
+
+        Raises:
+            ButtonNotRederedException: Si el botón aún no ha sido renderizado.
         """
         if self.__coordinates is None:
             raise ButtonNotRederedException("El botón no ha sido renderizado.")
@@ -108,10 +118,10 @@ class Button:
     @property
     def on_click(self):
         """
-        Propiedad getter para obtener la función asociada a la acción de clic del botón.
-
+        Propiedad para obtener la función de clic del botón.
+        
         Returns:
-            Optional[Callable]: Función a ejecutar cuando el botón es clicado.
+            Optional[Callable]: La función que se ejecutará cuando se haga clic en el botón.
         """
         self.__on_click = None
         return self.__on_click
@@ -119,16 +129,16 @@ class Button:
     @on_click.setter
     def on_click(self, on_click: Callable):
         """
-        Propiedad setter para asignar una función que se ejecutará cuando el botón sea clicado.
+        Establece la función que se ejecutará cuando se haga clic en el botón.
 
         Args:
-            on_click (Callable): Función a ejecutar al hacer clic en el botón.
+            on_click (Callable): La función que se asignará al evento de clic.
         """
         self.__on_click = on_click
 
     def click(self):
         """
-        Ejecuta la función `on_click` si existe cuando se hace clic en el botón.
+        Ejecuta la función de clic asignada si está disponible.
         """
         if self.__on_click is None:
             return
@@ -138,10 +148,10 @@ class Button:
     @property
     def surface(self):
         """
-        Propiedad getter que devuelve la superficie del botón.
+        Propiedad para obtener la superficie actual del botón.
 
         Returns:
-            SurfaceType: Superficie que contiene el botón.
+            SurfaceType: Superficie renderizada del botón.
         """
         return self.__surface
 
@@ -149,12 +159,12 @@ class Button:
         self, text_content: str, size: int = 16, color: ColorValue = "white"
     ):
         """
-        Inserta el texto dentro del área de texto del botón.
+        Inserta texto en el botón y ajusta el tamaño de la superficie si es necesario.
 
         Args:
-            text_content (str): Texto que se mostrará en el botón.
-            size (int): Tamaño de la fuente del texto.
-            color (ColorValue): Color del texto.
+            text_content (str): El texto a mostrar en el botón.
+            size (int): Tamaño de la fuente del texto. Por defecto es 16.
+            color (ColorValue): Color del texto. Por defecto es blanco.
         """
         font = get_font(size)
         text = font.render(text_content, True, color)
@@ -185,21 +195,18 @@ class Button:
 
     def blit(self, surface: SurfaceType, x: int = 0, y: int = 0):
         """
-        Dibuja el botón en una superficie de Pygame.
+        Dibuja el botón en la superficie en la posición especificada (x, y).
 
         Args:
-            surface (SurfaceType): Superficie donde se renderizará el botón.
-            x (int): Posición X en la superficie.
-            y (int): Posición Y en la superficie.
+            surface (SurfaceType): La superficie donde se renderizará el botón.
+            x (int, optional): Coordenada x para la posición del botón. Por defecto es 0.
+            y (int, optional): Coordenada y para la posición del botón. Por defecto es 0.
         """
         self.__coordinates = (x, y)
         surface.blit(self.__surface, (x, y))
 
 
 if __name__ == "__main__":
-    """
-    Bloque principal que ejecuta una pantalla de prueba para ver el comportamiento de los botones.
-    """
     screen = Screen("test button!")
 
     topleft = screen.screen.get_rect().topleft
@@ -216,6 +223,12 @@ if __name__ == "__main__":
     button3.blit(screen.screen, y=300)
 
     def on_click(event: Event):
+        """
+        Función para manejar el evento de clic en la pantalla.
+
+        Args:
+            event (Event): Evento de Pygame que representa la interacción del usuario.
+        """
         pass
 
     screen.on_click = on_click
