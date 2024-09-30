@@ -15,7 +15,7 @@ class Screen(Clock):
 
     """Clase que representa una pantalla en el juego
 
-    Atributos:
+    Atributes:
     __screen : SurfaceType
     Superficie donde se muestran  los elementos del juego.
     __title : str
