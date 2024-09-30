@@ -100,7 +100,6 @@ class Board:
 
         is_o_turn = self.__turn % 2 == 0
         self.__turn = self.__turn + 1
-        self.__turn += 1
 
         if is_o_turn:
             self.__set_play(x, y, Plays.O)
