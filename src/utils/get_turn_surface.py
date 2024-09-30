@@ -4,12 +4,33 @@ from components.button import Button
 
 
 def get_turn_surface(game: Game, cors: RectType):
+    """
+    Crea una superficie para mostrar el turno actual en el juego.
+
+    Este método genera una superficie de juego donde se mostrará el texto 
+    que indica el turno actual (ya sea el turno de 'X' o de 'O'). 
+    El turno se alterna dependiendo del valor entero que representa el turno actual.
+
+    Argumentos:
+    - game (Game): Instancia del juego en curso que se encargará de gestionar la superficie.
+    - cors (RectType): Coordenadas y dimensiones (rectángulo) donde se colocará la superficie del turno.
+    Retorno:
+    - Tuple[Surface, Rect, function]: Retorna la superficie creada, el rectángulo asociado a la superficie y una función `render_turn`.
+    """
+
+
     turn_surface = game.create_surface()
     turn_cors = turn_surface.get_rect(topleft=cors.topleft)
 
     turn_text = Button(turn_cors.topleft)
 
     def render_turn(turn: int):
+        """
+        Función interna que actualiza el texto del turno en función del número de turno.
+
+        Argumentos:
+        - turn (int): Número entero que representa el turno actual.
+        """
         nonlocal turn_text
 
         is_x_turn = turn % 2 == 0

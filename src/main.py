@@ -8,6 +8,17 @@ from start_game import start_game
 
 
 def main():
+    """
+    Inicializa Pygame y establece la ventana principal del juego.
+    Crea tres botones interactivos: '¡Jugar contra la Máquina!', '¡Versus!' y '¡Salir!'.
+    Los botones se posicionan centrados en la pantalla y cada uno tiene una función asignada cuando son presionados.
+    
+    Parámetros:
+        Ninguno
+
+    Retorno:
+        Ninguno
+    """
     pygame.init()
 
     game = Game("Triki!")
@@ -29,6 +40,16 @@ def main():
     versus_button.insert_text("¡Versus!", 16, "yellow")
 
     def on_versus():
+        """
+        Función ejecutada al hacer clic en el botón '¡Versus!'.
+        Actualmente solo imprime 'Versus' en la consola.
+        
+        Parámetros:
+            Ninguno
+
+        Retorno:
+            Ninguno
+        """
         print("Versus")
 
     versus_button.on_click = on_versus
@@ -45,6 +66,16 @@ def main():
     quit_button.insert_text("¡Salir!", 16, "yellow")
 
     def on_quit():
+        """
+        Función ejecutada al hacer clic en el botón '¡Salir!'.
+        Cierra el juego y termina la ejecución.
+
+        Parámetros:
+            Ninguno
+
+        Retorno:
+            Ninguno
+        """
         pygame.quit()
         exit()
 
@@ -61,8 +92,18 @@ def main():
         )
         - quit_button.surface.get_height() // 2,
     )
+    
 
     def on_click(event: Event):
+        """
+        Detecta clics del mouse en los botones.
+        
+        Parámetros:
+            event (Event): El evento generado por el usuario (clic del mouse).
+
+        Retorno:
+            Ninguno
+        """
         mouse_pos = pygame.mouse.get_pos()
         for button in game.buttons:
             if button.is_hover(mouse_pos):
