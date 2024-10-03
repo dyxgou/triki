@@ -2,10 +2,31 @@ import pygame
 
 
 class Clock:
-    _clock: pygame.time.Clock
 
+    """
+    REPRSENTA UN OBJETO DE RELOJ PARA ASDMINISTRAR LAS VELOCIDAD DE LOS CUADROS POR SEGUNDO DE LA APLICACION PYGAME
+    ATRIBUTOS:
+      _CLOCK (PYGAME.TIME.CLOCK): EL RELOJ DE PYGAME SUBYACENTE
+
+METODOS:
+     _INIT_():INICIALZAR UNA INSTANCIA DE CLOCK
+     TICK(FRAMES:INIT):ACTUALIZA EL RELOJ Y LA TAZA DE CUADROS POR SEGUNDO
+     """
+    
     def __init__(self) -> None:
+        """
+        INICIALIZAR UNA INSTANCIA DEL RELOJ
+        """
         self._clock = pygame.time.Clock()
 
-    def tick(self, frames: int):
+    """
+    ACTUALIZAR EL RELOJ Y LIMITA LA TASA DE CUADROS POR SEGUNDO A UN VALOR ESPECIFICO
+
+ARGUMENTOS:
+FRAMES (INIT): LA VELOCIDAD DE CUADROS DESEADA 
+
+"""
+
+
+    def tick(self, frames: int) -> None:
         self._clock.tick(frames)
